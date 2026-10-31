@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="800" y1="0" x2="800" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#113247"/>
+      <stop offset=".43" stop-color="#0B2735"/>
+      <stop offset="1" stop-color="#07111C"/>
+    </linearGradient>
+    <linearGradient id="field" x1="800" y1="490" x2="800" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1B6650" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#0D382D" stop-opacity=".25"/>
+    </linearGradient>
+    <radialGradient id="lamp">
+      <stop stop-color="#A5F3FC" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1600v1000H0z"/>
+  <path fill="#102D3B" fill-opacity=".92" d="M0 190 420 340l380 76 380-76 420-150v405l-420 94-380 65-380-65L0 595z"/>
+  <path stroke="#74B8C6" stroke-opacity=".12" stroke-width="2" d="m0 237 425 149 375 74 375-74 425-149M0 284l428 153 372 69 372-69 428-153M0 330l430 157 370 65 370-65 430-157M0 378l433 161 367 57 367-57 433-161M0 426l438 163 362 49 362-49 438-163M0 475l444 165 356 41 356-41 444-165"/>
+  <path fill="#61E7FA" fill-opacity=".12" d="M121 133h370l35 78H85zm990 0h370l36 78h-441z"/>
+  <path fill="url(#lamp)" d="M58 120h470v260H58zM1063 120h470v260h-470z"/>
+  <path fill="#A4F5FF" fill-opacity=".8" d="M116 149h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm637 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9zm23 0h9v16h-9z"/>
+  <path fill="url(#field)" d="m0 595 420 94 380 65 380-65 420-94v405H0z"/>
+  <path stroke="#B6F5C4" stroke-opacity=".22" stroke-width="2" d="M0 683 420 762l380 53 380-53 420-79M0 780l420 63 380 43 380-43 420-63M0 880l420 46 380 34 380-34 420-46"/>
+  <path stroke="#56E8FA" stroke-opacity=".25" stroke-width="2" d="M800 660v340m-155-333-90 333m400-333 90 333"/>
+  <path fill="#7AEAFF" fill-opacity=".38" d="M246 552h16v16h-16zm193 34h16v16h-16zm332 45h16v16h-16zm359-45h16v16h-16zm211-34h16v16h-16z"/>
+</svg>
