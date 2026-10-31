@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111d">
+  <meta name="description" content="Protótipo de gestão de time de futebol inspirado em interfaces de videogame.">
+  <title>CLUB//MODE — Gestão de Time</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=lineup-map-1">
+  <script src="app.js?v=lineup-map-1" defer></script>
+</head>
+<body>
+  <div class="stadium-backdrop" aria-hidden="true"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="club-lockup">
+        <span class="club-crest" data-team-crest aria-hidden="true">F7</span>
+        <span class="club-copy">
+          <span class="eyebrow">GESTÃO DE FUTEBOL 7</span>
+          <strong data-team-name>CLUB//MODE</strong>
+          <span class="club-manager" data-coach-name>ACESSO AO TIME</span>
+        </span>
+      </div>
+      <div class="topbar-status">
+        <button class="auth-entry" type="button" data-open-screen="auth">ENTRAR / CADASTRO <span>↗</span></button>
+        <button class="auth-entry" type="button" data-logout hidden>SAIR <span>↗</span></button>
+        <span class="online-indicator"><i></i> ONLINE</span>
+        <span class="manager-avatar" data-user-avatar aria-label="Perfil do usuário">US</span>
+      </div>
+    </header>
+
+    <nav class="game-nav" role="tablist" aria-label="Navegação principal">
+      <button id="tab-dashboard" class="nav-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="screen-dashboard" data-screen="dashboard">
+        <span class="nav-index">01</span> PAINEL
+      </button>
+      <button id="tab-profile" class="nav-tab" type="button" role="tab" aria-selected="false" aria-controls="screen-profile" data-screen="profile">
+        <span class="nav-index">02</span> SEU PERFIL
+      </button>
+      <button id="tab-players" class="nav-tab" type="button" role="tab" aria-selected="false" aria-controls="screen-players" data-screen="players" data-coach-only hidden>
+        <span class="nav-index">03</span> JOGADORES
+      </button>
+      <button id="tab-club" class="nav-tab" type="button" role="tab" aria-selected="false" aria-controls="screen-club" data-screen="club" data-coach-only hidden>
+        <span class="nav-index">04</span> CLUBE
+      </button>
+    </nav>
+
+    <main>
+      <section id="screen-auth" class="screen auth-screen" aria-labelledby="auth-title" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">CLUB//MODE <span> / </span> ACESSO AO TIME</p>
+            <h1 id="auth-title">ENTRAR <span>OU CRIAR CONTA</span></h1>
+          </div>
+        </div>
+
+        <div class="auth-layout">
+          <aside class="glass-panel auth-brief">
+            <div class="auth-crest" aria-hidden="true">F7</div>
+            <p class="eyebrow">SEU TIME. SEU JOGO.</p>
+            <h2>ENTRE EM <span>CAMPO.</span></h2>
+            <p class="auth-description">Acompanhe o time, consulte seu perfil e participe da evolução do elenco.</p>
+            <div class="auth-tactical" aria-hidden="true">
+              <span class="tactical-player tactical-forward">ATA</span>
+              <span class="tactical-player tactical-mid-one">MEI</span><span class="tactical-player tactical-mid-two">MEI</span><span class="tactical-player tactical-mid-three">MEI</span>
+              <span class="tactical-player tactical-def-one">ZAG</span><span class="tactical-player tactical-def-two">ZAG</span>
+              <span class="tactical-player tactical-keeper">GOL</span>
+            </div>
+            <div class="auth-brief-footer"><span><i class="live-pulse"></i> FUTEBOL 7</span><span>GESTÃO · DESEMPENHO · TIME</span></div>
+          </aside>
+
+          <section class="glass-panel auth-panel" aria-label="Formulários de acesso e cadastro">
+            <div class="auth-mode-tabs" role="tablist" aria-label="Tipo de acesso">
+              <button type="button" class="auth-mode is-active" role="tab" aria-selected="true" data-auth-mode="login">ENTRAR</button>
+              <button type="button" class="auth-mode" role="tab" aria-selected="false" data-auth-mode="register">CRIAR CONTA</button>
+            </div>
+
+            <div class="auth-view" data-auth-view="login">
+              <div class="auth-view-heading"><p class="eyebrow">BEM-VINDO DE VOLTA</p><h2>ACESSO <span>DO USUÁRIO</span></h2></div>
+              <form class="auth-form" data-login-form>
+                <label class="field">E-MAIL<input name="email" type="email" placeholder="nome@exemplo.com" autocomplete="email" required></label>
+                <label class="field">SENHA<input name="password" type="password" placeholder="SUA SENHA" autocomplete="current-password" required></label>
+                <p class="auth-feedback" data-login-feedback role="status" aria-live="polite"></p>
+                <button class="save-button" type="submit">ENTRAR NO TIME <i>↗</i></button>
+              </form>
+              <section class="team-catalog" aria-labelledby="team-catalog-title">
+                <div class="team-catalog-heading"><div><p class="eyebrow">ENCONTRE SEU TIME</p><h3 id="team-catalog-title">TIMES <span>CADASTRADOS</span></h3></div><b data-team-count>00 TIMES</b></div>
+                <div class="team-catalog-list" data-team-catalog>
+                  <p class="team-catalog-empty">AINDA NÃO HÁ TIMES CADASTRADOS NESTA SESSÃO.</p>
+                </div>
+                <p class="team-catalog-note">A lista mostra apenas o escudo e o nome de cada time.</p>
+              </section>
+            </div>
+
+            <div class="auth-view" data-auth-view="register" hidden>
+              <div class="auth-view-heading"><p class="eyebrow">NOVO ACESSO · ETAPA 01</p><h2>COMO VOCÊ <span>VAI PARTICIPAR?</span></h2></div>
+              <div class="register-role-grid">
+                <button class="register-role" type="button" data-register-role="coach">
+                  <span class="register-role-icon">♜</span><span class="eyebrow">GESTÃO DO TIME</span><strong>SOU TREINADOR</strong><small>Crie o time e compartilhe o PIN com os jogadores.</small><i>↗</i>
+                </button>
+                <button class="register-role" type="button" data-register-role="player">
+                  <span class="register-role-icon">♙</span><span class="eyebrow">ACESSO AO ELENCO</span><strong>SOU JOGADOR</strong><small>Crie sua conta e entre com o convite do treinador.</small><i>↗</i>
+                </button>
+              </div>
+              <p class="auth-feedback" data-register-feedback role="status" aria-live="polite"></p>
+              <button class="text-action" type="button" data-auth-back>← VOLTAR PARA ENTRAR</button>
+            </div>
+
+            <div class="auth-view" data-auth-view="coach" hidden>
+              <div class="auth-view-heading"><p class="eyebrow">NOVO TREINADOR · ETAPA 02</p><h2>CRIAR <span>SEU TIME</span></h2></div>
+              <form class="auth-form" data-coach-form>
+                <div class="form-grid">
+                  <label class="field">NOME DO TREINADOR<input name="coachName" type="text" placeholder="NOME COMPLETO" autocomplete="name" required></label>
+                  <label class="field">E-MAIL<input name="email" type="email" placeholder="nome@exemplo.com" autocomplete="email" required></label>
+                  <label class="field">SENHA<input name="password" type="password" minlength="8" placeholder="MÍNIMO DE 8 CARACTERES" autocomplete="new-password" required></label>
+                  <label class="field">NOME DO TIME<input name="teamName" type="text" maxlength="40" placeholder="NOME DO TIME" required></label>
+                  <label class="field field-wide upload-field">ESCUDO DO TIME
+                    <input name="logo" type="file" accept="image/png,image/jpeg,image/webp" data-team-logo>
+                    <span class="upload-prompt"><b>＋</b> ENVIAR ESCUDO <small>PNG / JPG / WEBP</small></span>
+                  </label>
+                  <label class="field">PIN DE CONVITE<input name="pin" type="password" inputmode="numeric" minlength="6" maxlength="12" pattern="[0-9]{6,12}" placeholder="6 A 12 DÍGITOS" autocomplete="new-password" required></label>
+                  <label class="field">CONFIRMAR PIN<input name="pinConfirm" type="password" inputmode="numeric" minlength="6" maxlength="12" pattern="[0-9]{6,12}" placeholder="DIGITE O PIN NOVAMENTE" autocomplete="new-password" required></label>
+                </div>
+                <p class="auth-help">Compartilhe o PIN apenas com jogadores convidados. As contas serão salvas no banco local do aplicativo.</p>
+                <p class="auth-feedback" data-coach-feedback role="status" aria-live="polite"></p>
+                <button class="save-button" type="submit">CRIAR TIME E CONTA <i>↗</i></button>
+              </form>
+              <button class="text-action" type="button" data-auth-back>← ESCOLHER OUTRO PERFIL</button>
+            </div>
+
+            <div class="auth-view" data-auth-view="player-account" hidden>
+              <div class="auth-view-heading"><p class="eyebrow">NOVO JOGADOR · ETAPA 02 DE 03</p><h2>CRIAR <span>SUA CONTA</span></h2></div>
+              <form class="auth-form" data-player-account-form>
+                <div class="form-grid">
+                  <label class="field field-wide">NOME COMPLETO<input name="name" type="text" placeholder="NOME DO JOGADOR" autocomplete="name" required></label>
+                  <label class="field field-wide">E-MAIL<input name="email" type="email" placeholder="nome@exemplo.com" autocomplete="email" required></label>
+                  <label class="field">SENHA<input name="password" type="password" minlength="8" placeholder="MÍNIMO DE 8 CARACTERES" autocomplete="new-password" required></label>
+                  <label class="field">CONFIRMAR SENHA<input name="passwordConfirm" type="password" minlength="8" placeholder="DIGITE A SENHA NOVAMENTE" autocomplete="new-password" required></label>
+                </div>
+                <p class="auth-feedback" data-player-account-feedback role="status" aria-live="polite"></p>
+                <button class="save-button" type="submit">CONTINUAR PARA O PERFIL <i>↗</i></button>
+              </form>
+              <button class="text-action" type="button" data-auth-back>← ESCOLHER OUTRO PERFIL</button>
+            </div>
+
+            <div class="auth-view" data-auth-view="player-profile" hidden>
+              <div class="auth-view-heading"><p class="eyebrow">PERFIL DO JOGADOR · ETAPA 03 DE 03</p><h2>DADOS <span>DO JOGADOR</span></h2></div>
+              <form class="auth-form" data-player-profile-form>
+                <div class="form-grid">
+                  <label class="field">ALTURA <i>CM</i><input name="height" type="number" min="100" max="230" placeholder="EX.: 175" required></label>
+                  <label class="field">PESO <i>KG</i><input name="weight" type="number" min="30" max="200" step="0.1" placeholder="EX.: 72" required></label>
+                  <label class="field">POSIÇÃO PRINCIPAL<select name="position" required><option value="">SELECIONE</option><option>GOL</option><option>ZAG</option><option>ALA</option><option>MEI</option><option>ATA</option></select></label>
+                  <label class="field">SEGUNDA POSIÇÃO<select name="secondaryPosition"><option value="">NENHUMA</option><option>GOL</option><option>ZAG</option><option>MEI</option><option>ATA</option></select></label>
+                  <label class="field field-wide">PÉ PREFERIDO<select name="preferredFoot"><option>Direito</option><option>Esquerdo</option><option>Ambidestro</option></select></label>
+                </div>
+                <p class="auth-feedback" data-player-profile-feedback role="status" aria-live="polite"></p>
+                <button class="save-button" type="submit">CONTINUAR PARA O CONVITE <i>↗</i></button>
+              </form>
+              <button class="text-action" type="button" data-auth-step-back="player-account">← VOLTAR AOS DADOS DA CONTA</button>
+            </div>
+
+            <div class="auth-view" data-auth-view="player-invite" hidden>
+              <div class="auth-view-heading"><p class="eyebrow">CONVITE DO TIME · ÚLTIMA ETAPA</p><h2>VALIDAR <span>ACESSO</span></h2></div>
+              <form class="auth-form" data-player-invite-form>
+                <label class="field">TIME<select name="team" data-player-team required><option value="">SELECIONE O TIME</option></select></label>
+                <label class="field">PIN DO TREINADOR<input name="pin" type="password" inputmode="numeric" minlength="6" maxlength="12" pattern="[0-9]{6,12}" placeholder="PIN DE 6 A 12 DÍGITOS" autocomplete="off" required></label>
+                <p class="auth-help">Peça o código diretamente ao treinador do time escolhido.</p>
+                <p class="auth-feedback" data-player-invite-feedback role="status" aria-live="polite"></p>
+                <button class="save-button" type="submit">VALIDAR PIN E CONCLUIR <i>↗</i></button>
+              </form>
+              <button class="text-action" type="button" data-no-team>AINDA NÃO TENHO TIME — VER TIMES <span>↗</span></button>
+              <button class="text-action" type="button" data-auth-step-back="player-profile">← VOLTAR AOS DADOS DO JOGADOR</button>
+            </div>
+
+            <p class="auth-prototype-note"><span>ⓘ</span> ACESSO PROTEGIDO · SENHAS E PINs SÃO ARMAZENADOS COMO HASH.</p>
+          </section>
+        </div>
+      </section>
+
+      <section id="screen-dashboard" class="screen is-active" role="tabpanel" aria-labelledby="tab-dashboard">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">CENTRAL DE COMANDO <span> / </span> TIME PRINCIPAL</p>
+            <h1>PAINEL <span>&amp; ESCALAÇÃO</span></h1>
+          </div>
+          <div class="section-meta"><span class="live-pulse"></span> ESCALAÇÃO LIVRE <b data-starter-count>0 TITULARES</b></div>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="glass-panel lineup-panel" aria-labelledby="lineup-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">TÁTICA PRINCIPAL · FUTEBOL 7</p>
+                <h2 id="lineup-title">ESQUEMA PADRÃO <span>— 2-3-1</span></h2>
+              </div>
+              <div class="lineup-badges"><span class="formation-badge" data-match-result hidden></span><span class="formation-badge" data-lineup-count>0 JOGADORES</span></div>
+            </div>
+            <div class="match-controls">
+              <label class="field">PARTIDA<select data-match-select aria-label="Selecionar partida"><option value="">NENHUMA PARTIDA</option></select></label>
+              <button class="match-action" type="button" data-new-match data-coach-only hidden>NOVO JOGO <span>＋</span></button>
+              <button class="match-action" type="button" data-edit-match data-coach-only hidden disabled>EDITAR ESCALAÇÃO <span>↗</span></button>
+              <button class="match-action" type="button" data-record-result data-coach-only hidden disabled>REGISTRAR RESULTADO <span>＋</span></button>
+            </div>
+            <form class="match-editor" data-match-form hidden>
+              <div class="match-editor-heading"><strong data-match-form-title>NOVA PARTIDA</strong><button type="button" class="text-action" data-cancel-match>FECHAR</button></div>
+              <div class="match-form-fields">
+                <label class="field">ADVERSÁRIO<input name="opponent" maxlength="100" required placeholder="NOME DO ADVERSÁRIO"></label>
+                <label class="field">DATA<input name="played_on" type="date" required></label>
+                <label class="field">HORÁRIO<input name="kickoff_time" type="time" required></label>
+                <label class="field">LOCAL<input name="venue" maxlength="150" placeholder="LOCAL DA PARTIDA"></label>
+                <label class="field">FORMAÇÃO BASE<select name="formation"><option value="Livre">LIVRE</option><option>2-3-1</option><option>3-2-1</option><option>2-2-2</option><option>1-3-2</option></select></label>
+              </div>
+              <p class="roster-help">Escolha quantos atletas quiser. Titulares, reservas e posições são opcionais; a formação base não limita sua escalação.</p>
+              <div class="roster-picker" data-roster-picker><p class="team-catalog-empty">Cadastre jogadores e eles aparecerão aqui.</p></div>
+              <section class="lineup-map-editor" aria-label="Posicionar titulares no campo">
+                <div class="lineup-map-heading">
+                  <strong>POSICIONE NO CAMPO</strong>
+                  <span>OPCIONAL</span>
+                </div>
+                <p class="roster-help">Marque o atleta como titular, toque em MAPA e depois toque no campo para definir a posição. No computador, também é possível clicar no campo.</p>
+                <div class="field-wrap editor-field-wrap">
+                  <div class="pitch pitch-editor" data-lineup-editor-pitch role="application" aria-label="Campo editável para posicionar titulares" tabindex="0">
+                    <div class="pitch-lines" aria-hidden="true">
+                      <span class="pitch-halfway"></span><span class="pitch-center"></span>
+                      <span class="pitch-box pitch-box-top"></span><span class="pitch-box pitch-box-bottom"></span>
+                      <span class="pitch-goal pitch-goal-top"></span><span class="pitch-goal pitch-goal-bottom"></span>
+                      <span class="pitch-corner pitch-corner-one"></span><span class="pitch-corner pitch-corner-two"></span>
+                    </div>
+                    <div class="pitch-player-layer" data-editor-pitch-players></div>
+                  </div>
+                </div>
+                <p class="auth-feedback lineup-map-feedback" data-lineup-map-feedback role="status" aria-live="polite">Nenhum titular selecionado para posicionar.</p>
+              </section>
+              <p class="auth-feedback" data-match-feedback role="status" aria-live="polite"></p>
+              <button class="save-button" type="submit">SALVAR PARTIDA E CONVOCAÇÃO <i>↗</i></button>
+            </form>
+            <form class="match-editor match-result-editor" data-result-form hidden>
+              <div class="match-editor-heading"><strong data-result-form-title>RESULTADO DA PARTIDA</strong><button type="button" class="text-action" data-cancel-result>FECHAR</button></div>
+              <div class="result-score-fields">
+                <label class="field"><span data-result-team>TIME</span><input name="home_score" type="number" min="0" max="99" required></label>
+                <span aria-hidden="true">×</span>
+                <label class="field"><span data-result-opponent>ADVERSÁRIO</span><input name="away_score" type="number" min="0" max="99" required></label>
+              </div>
+              <p class="roster-help">Informe quantos gols, assistências e cartões cada atleta convocado teve. A soma dos gols precisa conferir com o placar do time.</p>
+              <div class="table-scroll">
+                <table class="game-table result-player-table">
+                  <thead><tr><th>JOGADOR</th><th>GOLS</th><th>ASSIST.</th><th>AMARELOS</th><th>VERMELHOS</th></tr></thead>
+                  <tbody data-result-players></tbody>
+                </table>
+              </div>
+              <p class="auth-feedback" data-result-feedback role="status" aria-live="polite"></p>
+              <button class="save-button" type="submit">SALVAR RESULTADO E ESTATÍSTICAS <i>↗</i></button>
+            </form>
+            <p class="auth-feedback match-status" data-match-status role="status" aria-live="polite" hidden></p>
+
+            <div class="pitch-stage">
+              <div class="field-wrap">
+                <div class="pitch" aria-label="Campo de futebol 7">
+                  <div class="pitch-lines" aria-hidden="true">
+                    <span class="pitch-halfway"></span><span class="pitch-center"></span>
+                    <span class="pitch-box pitch-box-top"></span><span class="pitch-box pitch-box-bottom"></span>
+                    <span class="pitch-goal pitch-goal-top"></span><span class="pitch-goal pitch-goal-bottom"></span>
+                    <span class="pitch-corner pitch-corner-one"></span><span class="pitch-corner pitch-corner-two"></span>
+                  </div>
+                  <div class="pitch-player-layer" data-pitch-players></div>
+                </div>
+              </div>
+              <aside class="bench-panel" aria-label="Banco de reservas">
+                <div class="bench-heading"><span class="eyebrow">RESERVAS</span><b>10 <small>JOGADORES</small></b></div>
+                <div class="bench-list" data-bench-list>
+                  <button class="bench-player" type="button" data-bench-player="0" aria-label="Ver card do reserva 01"><span class="bench-number">01</span><span class="bench-player-copy"><b>RESERVA 01</b><small>ATA · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="1" aria-label="Ver card do reserva 02"><span class="bench-number">02</span><span class="bench-player-copy"><b>RESERVA 02</b><small>MEI · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="2" aria-label="Ver card do reserva 03"><span class="bench-number">03</span><span class="bench-player-copy"><b>RESERVA 03</b><small>ZAG · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="3" aria-label="Ver card do reserva 04"><span class="bench-number">04</span><span class="bench-player-copy"><b>RESERVA 04</b><small>MEI · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="4" aria-label="Ver card do reserva 05"><span class="bench-number">05</span><span class="bench-player-copy"><b>RESERVA 05</b><small>GOL · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="5" aria-label="Ver card do reserva 06"><span class="bench-number">06</span><span class="bench-player-copy"><b>RESERVA 06</b><small>ZAG · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="6" aria-label="Ver card do reserva 07"><span class="bench-number">07</span><span class="bench-player-copy"><b>RESERVA 07</b><small>ATA · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="7" aria-label="Ver card do reserva 08"><span class="bench-number">08</span><span class="bench-player-copy"><b>RESERVA 08</b><small>MEI · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="8" aria-label="Ver card do reserva 09"><span class="bench-number">09</span><span class="bench-player-copy"><b>RESERVA 09</b><small>ZAG · --</small></span><span class="bench-rating">--</span></button>
+                  <button class="bench-player" type="button" data-bench-player="9" aria-label="Ver card do reserva 10"><span class="bench-number">10</span><span class="bench-player-copy"><b>RESERVA 10</b><small>MEI · --</small></span><span class="bench-rating">--</span></button>
+                </div>
+                <article class="bench-player-card" data-bench-card hidden aria-label="Card do jogador reserva">
+                  <button type="button" class="bench-card-close" data-close-bench-card aria-label="Fechar card">×</button>
+                  <div class="bench-card-top"><b data-bench-overall>--</b><span data-bench-position>POS</span></div>
+                  <div class="bench-card-identity"><span class="bench-card-avatar">FC</span><span><small>FUT7 · RESERVA</small><strong data-bench-name>JOGADOR</strong></span></div>
+                  <svg class="bench-radar" viewBox="0 0 180 158" role="img" aria-label="Radar hexagonal de atributos do jogador">
+                    <g class="bench-radar-grid">
+                      <polygon points="90,20 150,55 150,103 90,138 30,103 30,55"></polygon>
+                      <polygon points="90,43 130,66 130,92 90,115 50,92 50,66"></polygon>
+                      <path d="M90 79V20M90 79l60-24M90 79h60M90 79v59M90 79l-60 24M90 79L30 55"></path>
+                    </g>
+                    <polygon class="bench-radar-area" data-bench-radar-area points="90,55 120,67 120,91 90,103 60,91 60,67"></polygon>
+                    <g class="bench-radar-labels"><text x="90" y="12" text-anchor="middle">ATA</text><text x="157" y="53">DEF</text><text x="157" y="109">FOR</text><text x="90" y="153" text-anchor="middle">VEL</text><text x="23" y="109" text-anchor="end">TEC</text><text x="23" y="53" text-anchor="end">INT</text></g>
+                  </svg>
+                  <div class="bench-attributes">
+                    <span>ATA <b data-bench-attribute="ata">--</b></span><span>DEF <b data-bench-attribute="def">--</b></span>
+                    <span>FOR <b data-bench-attribute="for">--</b></span><span>VEL <b data-bench-attribute="vel">--</b></span>
+                    <span>TEC <b data-bench-attribute="tec">--</b></span><span>INT <b data-bench-attribute="int">--</b></span>
+                  </div>
+                </article>
+              </aside>
+            </div>
+
+            <div class="lineup-footer">
+              <span><i class="legend-dot legend-starter"></i> TITULAR</span>
+              <span><i class="legend-dot legend-sub"></i> RESERVA</span>
+              <span class="chemistry-label">ENTROSAMENTO DO TIME <b>--</b></span>
+            </div>
+          </section>
+
+          <section class="tile-grid" aria-label="Resumo do time">
+            <button class="glass-panel action-tile tile-cyan profile-shortcut" type="button" data-open-screen="profile">
+              <span class="tile-icon" aria-hidden="true">♙</span><span class="tile-index">01 / CONTA</span>
+              <strong>SEU PERFIL</strong><small>FICHA DO USUÁRIO <b>↗</b></small>
+            </button>
+            <div class="glass-panel action-tile tile-green next-game-tile">
+              <span class="tile-icon" aria-hidden="true">◷</span><span class="tile-index">02 / AGENDA</span>
+              <strong>PRÓXIMO JOGO</strong><small>DATA · ADVERSÁRIO <b>--</b></small>
+              <button class="match-action next-game-action" type="button" data-next-match-action data-coach-only hidden>CADASTRAR JOGO <span>＋</span></button>
+            </div>
+            <div class="glass-panel action-tile tile-cyan evaluation-tile" data-evaluation-tile>
+              <span class="tile-icon" aria-hidden="true">★</span><span class="tile-index">03 / TIME</span>
+              <strong>AVALIAR JOGADORES</strong>
+              <small data-evaluation-status>LIBERAÇÃO APÓS O RESULTADO <b>🔒</b></small>
+              <button type="button" class="evaluation-open" data-open-evaluation disabled>AVALIAÇÃO BLOQUEADA</button>
+            </div>
+            <form class="evaluation-panel glass-panel" data-evaluation-panel hidden>
+              <div class="evaluation-heading"><div><p class="eyebrow">AVALIAÇÃO ANÔNIMA</p><h2>AVALIE <span>OS COMPANHEIROS</span></h2></div><button type="button" class="evaluation-close" data-close-evaluation aria-label="Fechar avaliações">×</button></div>
+              <p class="evaluation-instruction">Dê uma nota de 0 a 5 estrelas aos companheiros que participaram do jogo. Sua identidade não será exibida.</p>
+              <p class="visually-hidden" id="star-rating-help">Use as setas para mudar a nota. Selecione novamente a estrela marcada para limpar a avaliação.</p>
+              <fieldset class="evaluation-list">
+                <legend class="visually-hidden">Notas dos companheiros de time</legend>
+                <div class="evaluation-row"><span>JOGADOR 01</span><div class="star-rating" role="radiogroup" aria-label="Nota anônima para jogador 01" aria-describedby="star-rating-help"><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="1 estrela" data-rating-value="1" tabindex="0">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="2 estrelas" data-rating-value="2" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="3 estrelas" data-rating-value="3" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="4 estrelas" data-rating-value="4" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="5 estrelas" data-rating-value="5" tabindex="-1">★</button><input type="hidden" name="rating-player-01" value="0" data-rating-input></div></div>
+                <div class="evaluation-row"><span>JOGADOR 02</span><div class="star-rating" role="radiogroup" aria-label="Nota anônima para jogador 02" aria-describedby="star-rating-help"><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="1 estrela" data-rating-value="1" tabindex="0">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="2 estrelas" data-rating-value="2" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="3 estrelas" data-rating-value="3" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="4 estrelas" data-rating-value="4" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="5 estrelas" data-rating-value="5" tabindex="-1">★</button><input type="hidden" name="rating-player-02" value="0" data-rating-input></div></div>
+                <div class="evaluation-row"><span>JOGADOR 03</span><div class="star-rating" role="radiogroup" aria-label="Nota anônima para jogador 03" aria-describedby="star-rating-help"><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="1 estrela" data-rating-value="1" tabindex="0">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="2 estrelas" data-rating-value="2" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="3 estrelas" data-rating-value="3" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="4 estrelas" data-rating-value="4" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="5 estrelas" data-rating-value="5" tabindex="-1">★</button><input type="hidden" name="rating-player-03" value="0" data-rating-input></div></div>
+                <div class="evaluation-row"><span>JOGADOR 04</span><div class="star-rating" role="radiogroup" aria-label="Nota anônima para jogador 04" aria-describedby="star-rating-help"><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="1 estrela" data-rating-value="1" tabindex="0">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="2 estrelas" data-rating-value="2" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="3 estrelas" data-rating-value="3" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="4 estrelas" data-rating-value="4" tabindex="-1">★</button><button class="star-rating-option" type="button" role="radio" aria-checked="false" aria-label="5 estrelas" data-rating-value="5" tabindex="-1">★</button><input type="hidden" name="rating-player-04" value="0" data-rating-input></div></div>
+              </fieldset>
+              <button class="save-button" type="submit">ENVIAR AVALIAÇÕES ANÔNIMAS <i>↗</i></button>
+              <p class="evaluation-feedback" role="status" aria-live="polite"></p>
+            </form>
+            <div class="glass-panel action-tile tile-blue goals-tile">
+              <span class="tile-icon" aria-hidden="true">⌁</span><span class="tile-index">04 / EVOLUÇÃO</span>
+              <strong>METAS</strong><small>OBJETIVOS DO TIME <b>--</b></small>
+            </div>
+            <div class="glass-panel action-tile tile-gold coach-shortcut coach-result-tile" data-coach-only hidden>
+              <span class="tile-icon" aria-hidden="true">▥</span><span class="tile-index">05 / RESULTADO</span>
+              <strong>RESULTADO DO JOGO</strong><small data-coach-result-status>AGUARDANDO REGISTRO DO TREINADOR <b>○</b></small>
+              <button type="button" class="evaluation-open" data-compute-result disabled>REGISTRO DO RESULTADO EM BREVE</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="screen-profile" class="screen" role="tabpanel" aria-labelledby="tab-profile" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">CENTRAL DE COMANDO <span> / </span> ÁREA PESSOAL</p>
+            <h1 data-profile-title>SEU <span>PERFIL</span></h1>
+          </div>
+          <div class="section-meta"><span class="live-pulse"></span> DADOS DO USUÁRIO</div>
+        </div>
+
+        <div class="profile-view" data-role-content="player">
+          <div class="profile-grid">
+            <aside class="preview-column">
+              <article class="ultimate-card" aria-label="Card de perfil do jogador">
+                <div class="card-sheen" aria-hidden="true"></div>
+                <div class="card-topline"><span class="card-overall" data-card-overall>--</span><span class="card-position" data-card-position>POS</span></div>
+                <div class="card-portrait" data-card-portrait>
+                  <span class="portrait-placeholder">FOTO<br>DO JOGADOR</span>
+                  <span class="country-chip" data-card-country>PAÍS</span>
+                </div>
+                <div class="card-player-name" data-card-name>NOME DO JOGADOR</div>
+                <div class="card-card-division"><span>ELENCO</span><span>FUT7</span><span>20XX</span></div>
+                <div class="attribute-grid">
+                  <div class="card-attribute"><b data-attribute-value="ata">--</b><span>ATA</span></div>
+                  <div class="card-attribute"><b data-attribute-value="def">--</b><span>DEF</span></div>
+                  <div class="card-attribute"><b data-attribute-value="for">--</b><span>FOR</span></div>
+                  <div class="card-attribute"><b data-attribute-value="vel">--</b><span>VEL</span></div>
+                  <div class="card-attribute"><b data-attribute-value="tec">--</b><span>TEC</span></div>
+                  <div class="card-attribute"><b data-attribute-value="int">--</b><span>INT</span></div>
+                </div>
+              </article>
+              <div class="preview-caption"><span class="live-pulse"></span> CARD DO JOGADOR</div>
+              <div class="preview-overall glass-panel"><span>GERAL</span><b data-overall-summary>--</b><small>ATRIBUTOS CALCULADOS</small></div>
+            </aside>
+
+            <div class="profile-details">
+              <form id="player-form" class="glass-panel hud-section profile-form">
+                <fieldset>
+                  <legend><span>01</span> DADOS DO JOGADOR</legend>
+                  <div class="form-grid">
+                    <label class="field field-wide">NOME COMPLETO
+                      <input name="name" type="text" placeholder="NOME DO JOGADOR" autocomplete="name" data-player-name>
+                    </label>
+                    <label class="field">NOME NA CAMISA
+                      <input name="alias" type="text" placeholder="APELIDO" data-player-alias>
+                    </label>
+                    <label class="field">IDADE
+                      <input name="age" type="number" min="5" max="99" placeholder="—">
+                    </label>
+                    <label class="field">NACIONALIDADE
+                      <input name="country" type="text" maxlength="24" placeholder="PAÍS" data-player-country>
+                    </label>
+                    <label class="field">ALTURA <i>CM</i>
+                      <input name="height" type="number" min="100" max="230" placeholder="—">
+                    </label>
+                    <label class="field">PESO <i>KG</i>
+                      <input name="weight" type="number" min="30" max="200" step="0.1" placeholder="—">
+                    </label>
+                    <label class="field">PÉ PREFERIDO
+                      <select name="foot"><option value="">SELECIONE</option><option>ESQUERDO</option><option>DIREITO</option><option>AMBIDESTRO</option></select>
+                    </label>
+                    <label class="field">POSIÇÃO
+                      <select name="position" data-player-position><option value="">POS</option><option>GOL</option><option>ZAG</option><option>ALA</option><option>MEI</option><option>ATA</option></select>
+                    </label>
+                    <label class="field">SEGUNDA POSIÇÃO
+                      <select name="secondaryPosition"><option value="">NENHUMA</option><option>GOL</option><option>ZAG</option><option>ALA</option><option>MEI</option><option>ATA</option></select>
+                    </label>
+                    <label class="field field-wide upload-field">FOTO / AVATAR
+                      <input name="photo" type="file" accept="image/*" data-player-photo>
+                      <span class="upload-prompt"><b>＋</b> ESCOLHER IMAGEM <small>JPG / PNG</small></span>
+                    </label>
+                  </div>
+                </fieldset>
+                <button class="save-button" type="submit"><span>✦</span> SALVAR PERFIL <i>↗</i></button>
+                <p class="form-feedback" role="status" aria-live="polite"></p>
+              </form>
+
+              <section class="glass-panel radar-panel" aria-labelledby="radar-title">
+                <div class="radar-heading">
+                  <div><p class="eyebrow">PERFIL DE DESEMPENHO</p><h2 id="radar-title">RADAR <span>DE ATRIBUTOS</span></h2></div>
+                  <small data-profile-rating-summary>NOTA: 50% TREINADOR + 50% TIME</small>
+                </div>
+                <div class="radar-layout">
+                  <svg class="radar-chart" viewBox="0 0 300 270" role="img" aria-label="Radar hexagonal dos seis atributos do jogador">
+                    <g class="radar-grid">
+                      <polygon points="150,33 232,80 232,175 150,222 68,175 68,80"></polygon>
+                      <polygon points="150,56 212,92 212,163 150,199 88,163 88,92"></polygon>
+                      <polygon points="150,80 191,104 191,151 150,175 109,151 109,104"></polygon>
+                      <path d="M150 128V33M150 128l82-48M150 128h82M150 128l-0 94M150 128l-82 47M150 128l-82-95"></path>
+                    </g>
+                    <polygon class="radar-area" data-radar-area points="150,80 191,104 191,151 150,175 109,151 109,104"></polygon>
+                    <g class="radar-dots" data-radar-dots></g>
+                    <g class="radar-labels">
+                      <text x="150" y="20" text-anchor="middle">ATA</text><text x="250" y="76" text-anchor="start">DEF</text>
+                      <text x="250" y="181" text-anchor="start">FOR</text><text x="150" y="247" text-anchor="middle">VEL</text>
+                      <text x="50" y="181" text-anchor="end">TEC</text><text x="50" y="76" text-anchor="end">INT</text>
+                    </g>
+                  </svg>
+                  <div class="hud-attributes" aria-label="Atributos calculados">
+                    <div class="hud-attribute" data-hud-attribute="ata"><span>ATAQUE <b>ATA</b></span><i class="hud-track"><u data-attribute-bar="ata"></u></i><strong data-attribute-score="ata">--</strong></div>
+                    <div class="hud-attribute" data-hud-attribute="def"><span>DEFESA <b>ZAG</b></span><i class="hud-track"><u data-attribute-bar="def"></u></i><strong data-attribute-score="def">--</strong></div>
+                    <div class="hud-attribute" data-hud-attribute="for"><span>FORÇA <b>FOR</b></span><i class="hud-track"><u data-attribute-bar="for"></u></i><strong data-attribute-score="for">--</strong></div>
+                    <div class="hud-attribute" data-hud-attribute="vel"><span>VELOCIDADE <b>VEL</b></span><i class="hud-track"><u data-attribute-bar="vel"></u></i><strong data-attribute-score="vel">--</strong></div>
+                    <div class="hud-attribute" data-hud-attribute="tec"><span>TÉCNICA <b>TEC</b></span><i class="hud-track"><u data-attribute-bar="tec"></u></i><strong data-attribute-score="tec">--</strong></div>
+                    <div class="hud-attribute" data-hud-attribute="int"><span>INTELIGÊNCIA <b>INT</b></span><i class="hud-track"><u data-attribute-bar="int"></u></i><strong data-attribute-score="int">--</strong></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="coach-profile glass-panel" data-role-content="coach" hidden>
+          <div class="coach-profile-heading">
+            <div><p class="eyebrow">ÁREA DO TREINADOR</p><h2>PERFIL <span>&amp; RESULTADOS</span></h2></div>
+            <span class="coach-badge">COMISSÃO TÉCNICA</span>
+          </div>
+          <div class="coach-profile-grid">
+            <section class="coach-identity">
+              <div class="coach-portrait">TC</div>
+              <div><span class="eyebrow">TREINADOR PRINCIPAL</span><h3>NOME DO TREINADOR</h3><p>NOME DO TIME · FUTEBOL 7</p></div>
+            </section>
+            <section class="coach-results">
+              <p class="eyebrow">RESULTADOS DO TIME</p>
+              <div class="metric-strip">
+                <div><strong>--</strong><span>JOGOS</span></div><div><strong>--</strong><span>VITÓRIAS</span></div>
+                <div><strong>--</strong><span>EMPATES</span></div><div><strong>--</strong><span>DERROTAS</span></div>
+              </div>
+              <div class="result-placeholder"><span>DESEMPENHO DO TIME</span><div class="result-track"><i></i></div><b>AGUARDANDO DADOS</b></div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-players" class="screen" role="tabpanel" aria-labelledby="tab-players" data-coach-only hidden>
+        <div class="section-heading">
+          <div><p class="eyebrow">ÁREA RESTRITA <span> / </span> COMISSÃO TÉCNICA</p><h1>GESTÃO DE <span>JOGADORES</span></h1></div>
+          <div class="section-meta"><span class="live-pulse"></span> ELENCO <b>-- JOGADORES</b></div>
+        </div>
+        <section class="glass-panel data-panel">
+          <div class="data-panel-heading"><div><p class="eyebrow">VISÃO DETALHADA DO ELENCO</p><h2>ESTATÍSTICAS <span>&amp; NOTAS</span></h2></div><span class="table-note">DADOS DO ELENCO</span></div>
+          <div class="table-scroll">
+            <table class="game-table">
+              <thead><tr><th>JOGADOR</th><th>POS.</th><th>JOGOS</th><th>GOLS</th><th>ASSIST.</th><th>AMARELOS</th><th>VERMELHOS</th><th>DESARMES</th><th>NOTA MÉDIA</th><th>GERAL</th></tr></thead>
+              <tbody>
+                <tr><td><span class="table-avatar">01</span> JOGADOR 01</td><td>ATA</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td class="rating-value">--</td><td>--</td></tr>
+                <tr><td><span class="table-avatar">02</span> JOGADOR 02</td><td>MEI</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td class="rating-value">--</td><td>--</td></tr>
+                <tr><td><span class="table-avatar">03</span> JOGADOR 03</td><td>ZAG</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td class="rating-value">--</td><td>--</td></tr>
+                <tr><td><span class="table-avatar">04</span> JOGADOR 04</td><td>GOL</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td class="rating-value">--</td><td>--</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="players-detail-grid">
+            <article class="detail-card"><span class="eyebrow">DESEMPENHO RECENTE</span><h3>JOGADOR SELECIONADO</h3><p>ÚLTIMO JOGO · ADVERSÁRIO</p><div class="detail-stat-row"><span>GOLS <b>--</b></span><span>ASSISTÊNCIAS <b>--</b></span><span>NOTA <b>--</b></span></div></article>
+            <article class="detail-card"><span class="eyebrow">AVALIAÇÃO DO TREINADOR</span><h3>NOTA DO JOGADOR</h3><p>ESCALA DE 0 A 5 · POR PARTIDA</p><div class="coach-rating-meter"><i></i></div><div class="detail-stat-row"><span>MÉDIA DO TIME <b>--</b></span><span>AVALIAÇÕES <b>--</b></span></div></article>
+          </div>
+        </section>
+      </section>
+
+      <section id="screen-club" class="screen" role="tabpanel" aria-labelledby="tab-club" data-coach-only hidden>
+        <div class="section-heading">
+          <div><p class="eyebrow">ÁREA RESTRITA <span> / </span> COMISSÃO TÉCNICA</p><h1>ESTATÍSTICAS <span>DO TIME</span></h1></div>
+          <div class="section-meta"><span class="live-pulse"></span> JOGOS <b data-club-match-count>0</b></div>
+        </div>
+        <section class="club-summary-grid" aria-label="Indicadores do clube">
+          <article class="glass-panel club-stat-card"><span class="stat-icon">◷</span><span class="eyebrow">COMPETIÇÃO</span><strong>--</strong><small>JOGOS DISPUTADOS</small></article>
+          <article class="glass-panel club-stat-card stat-green"><span class="stat-icon">↗</span><span class="eyebrow">RESULTADOS</span><strong>--</strong><small>TAXA DE VITÓRIAS</small></article>
+          <article class="glass-panel club-stat-card stat-gold"><span class="stat-icon">⚽</span><span class="eyebrow">ATAQUE</span><strong>--</strong><small>GOLS MARCADOS</small></article>
+          <article class="glass-panel club-stat-card stat-blue"><span class="stat-icon">◇</span><span class="eyebrow">ELENCO</span><strong>--</strong><small>JOGADORES ATIVOS</small></article>
+        </section>
+        <div class="club-analytics-grid">
+          <section class="glass-panel data-panel">
+            <div class="data-panel-heading"><div><p class="eyebrow">ANÁLISE DAS PARTIDAS</p><h2>DESEMPENHO <span>DO TIME</span></h2></div><span class="table-note">ÚLTIMOS JOGOS</span></div>
+            <div class="club-chart" role="img" aria-label="Gráfico de exemplo com resultados do time">
+              <div class="chart-y-axis"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
+              <div class="chart-bars"><div><i style="--bar:48%"></i><span>JOGO 01</span></div><div><i class="bar-win" style="--bar:72%"></i><span>JOGO 02</span></div><div><i style="--bar:36%"></i><span>JOGO 03</span></div><div><i class="bar-win" style="--bar:82%"></i><span>JOGO 04</span></div><div><i style="--bar:57%"></i><span>JOGO 05</span></div><div><i class="bar-win" style="--bar:65%"></i><span>JOGO 06</span></div></div>
+            </div>
+          </section>
+          <section class="glass-panel data-panel club-record">
+            <div class="data-panel-heading"><div><p class="eyebrow">RESUMO DAS PARTIDAS</p><h2>HISTÓRICO <span>DO TIME</span></h2></div></div>
+            <div class="record-row"><span>GOLS MARCADOS</span><b>--</b></div><div class="record-row"><span>GOLS SOFRIDOS</span><b>--</b></div>
+            <div class="record-row"><span>MÉDIA DE POSSE DE BOLA</span><b>--</b></div><div class="record-row"><span>NOTA MÉDIA DO TIME</span><b>--</b></div>
+            <div class="record-callout"><span class="live-pulse"></span> OS RESULTADOS DO TIME SÃO VISÍVEIS APENAS AO TREINADOR.</div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="controller-footer">
+      <span><kbd>BOTÃO 1</kbd> CONFIRMAR</span>
+      <span><kbd>BOTÃO 2</kbd> VOLTAR</span>
+      <span class="footer-build">CLUB//MODE <b> / </b> FUTEBOL 7</span>
+    </footer>
+  </div>
+</body>
+</html>
